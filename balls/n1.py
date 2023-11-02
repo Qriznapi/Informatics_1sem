@@ -6,16 +6,21 @@ HEIGHT = 600
 
 
 class Ball:
-    def __init__(self):
+    def __init__(self, inx = 0, iny = 0):
         self.V = 1
         self.R = randint(30, 70) #храним размер, при каждом создании объекта будет выбираться случайно
-        self.x = randint(self.R, WIDTH - self.R) # храним положение по x и y
-        self.y = randint(self.R, HEIGHT - self.R)
+        self.x = inx
+        self.y = iny
+        if inx == 0:
+            self.x = randint(self.R, WIDTH - self.R) # храним положение по x и y
+        if iny == 0:
+            self.y = randint(self.R, HEIGHT - self.R)
         self.dx, self.dy = (10, 10) # это по сути шаг движения шаров. если увеличить -- будут двигаться быстрее
+        color = randint(100000, 999999)
         self.ball_id = canvas.create_oval(self.x - self.R,
                                      self.y - self.R,
                                      self.x + self.R,
-                                     self.y + self.R, fill="green") # при создании шарика отрисовываем его
+                                     self.y + self.R, fill= "#" + str(color)) # при создании шарика отрисовываем его
 
     def move(self):
         if self.V:
@@ -34,9 +39,13 @@ class Ball:
 
 
 def check(event):
+    flag = 0
     for ball in balls:
         if (ball.x - event.x) ** 2 + (ball.y - event.y) ** 2 <= ball.R ** 2:
             ball.V = 0
+            flag = 1
+    if not flag:
+        balls.append(Ball(event.x, event.y))
 def click_handler(event):
     print('Hello World! x=', event.x, 'y=', event.y)
     check(event)
